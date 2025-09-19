@@ -1,21 +1,31 @@
-using Microsoft.EntityFrameworkCore;
+using System.Reflection;
+using ApiPortfolio.Extensions;
 using Infrastructure.Data;
-using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-// Add services to the container.
+
+builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
+
+
+builder.Services.ConfigureCors();
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAplicacionServices();
+builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
+builder.Services.AddValidationErrors();   
+builder.Services.AddCustomRateLimiter();
+builder.Services.AddJwt(builder.Configuration); 
+
 
 builder.Services.AddDbContext<PublicDbContext>(options =>
 {
     string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")!;
     options.UseNpgsql(connectionString);
 });
-
 var app = builder.Build();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -23,8 +33,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseAuthentication();
-app.UseAuthorization();
 app.MapControllers();
+app.UseCors("CorsPolicy");
+app.UseHttpsRedirection();
+app.UseRateLimiter();
+
+app.UseAuthentication();
+app.UseAuthorization();  
 
 app.Run();

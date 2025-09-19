@@ -181,4 +181,4 @@ C:\Users\merli\developer\education\Backend\Apieducation\obj\Debug\net9.0\refint\
 C:\Users\merli\developer\education\Backend\Apieducation\obj\Debug\net9.0\Apieducation.pdb
 C:\Users\merli\developer\education\Backend\Apieducation\obj\Debug\net9.0\Apieducation.genruntimeconfig.cache
 C:\Users\merli\developer\education\Backend\Apieducation\obj\Debug\net9.0\ref\Apieducation.dll
-C:\Users\merli\developer\education\Backend\Apieducation\bin\Debug\net9.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\merli\developer\education\Backend\Apieducation\bin\Debug\net9.0\BCrypt.Net-Next.dll
