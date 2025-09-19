@@ -2,7 +2,6 @@ namespace Domain.Entities
 {
     public class RefreshToken : BaseEntity
     {
-        public int Id { get; set; } 
         public int MemberId { get; set; }
         public UserMember User { get; set; } = null!;
         
