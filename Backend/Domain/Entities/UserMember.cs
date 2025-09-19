@@ -13,6 +13,6 @@ namespace Domain.Entities
         public ICollection<Progress> Progresses { get; set; } = new List<Progress>();
 
         
-        //public List<RefreshToken> RefreshTokens { get; set; } = new();
+        public List<RefreshToken> RefreshTokens { get; set; } = new();
     }
 }
