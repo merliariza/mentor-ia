@@ -1,4 +1,3 @@
-using System;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -13,46 +12,38 @@ namespace Application.Services
         public OllamaService(HttpClient http)
         {
             _http = http;
-            _http.BaseAddress = new Uri("http://localhost:11434");
-            _http.Timeout = TimeSpan.FromSeconds(60); // Timeout seguro
         }
 
         public async Task<string> AskAsync(string prompt)
         {
-            try
+            var request = new
             {
-                var request = new
-                {
-                    model = "llama3:latest", // modelo correcto según curl
-                    prompt = prompt,
-                    stream = false
-                };
+                model = "llama3", // 👈 asegúrate que tienes este modelo descargado en Ollama
+                prompt = prompt,
+                stream = false    // para recibir toda la respuesta de una vez
+            };
 
-                var content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json");
-                var response = await _http.PostAsync("/api/generate", content);
+            var content = new StringContent(
+                JsonSerializer.Serialize(request),
+                Encoding.UTF8,
+                "application/json");
 
-                if (!response.IsSuccessStatusCode)
-                {
-                    var errorText = await response.Content.ReadAsStringAsync();
-                    return $"Error en Ollama: {response.StatusCode} - {errorText}";
-                }
+            var response = await _http.PostAsync("http://localhost:11434/api/generate", content);
 
-                var responseString = await response.Content.ReadAsStringAsync();
+            response.EnsureSuccessStatusCode();
 
-                using var doc = JsonDocument.Parse(responseString);
-                // Algunos modelos devuelven un array, ajustamos según la documentación
-                if (doc.RootElement.TryGetProperty("results", out var results) && results.GetArrayLength() > 0)
-                {
-                    return results[0].GetProperty("content")[0].GetString() ?? "";
-                }
+            var json = await response.Content.ReadAsStringAsync();
 
-                // Fallback
-                return doc.RootElement.GetProperty("response").GetString() ?? "";
-            }
-            catch (Exception ex)
-            {
-                return $"Ocurrió un error al conectarse a Ollama: {ex.Message}";
-            }
+            // Ollama responde con algo como:
+            // { "model":"llama3", "created_at":"...", "response":"{ \"allow\": true, \"topic\": \"Fotosíntesis\", \"answer\": \"...\" }", "done":true }
+
+            using var doc = JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            // El campo que nos interesa es "response", porque allí viene la respuesta de la IA
+            var result = root.GetProperty("response").GetString();
+
+            return result ?? "";
         }
     }
 }
