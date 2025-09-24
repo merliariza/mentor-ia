@@ -4,6 +4,9 @@ using Application.DTOs;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using Apieducation.Helpers;
+using Application.Interfaces;
+using AutoMapper;
+using Domain.Entities;
 
 namespace Apieducation.Controllers
 {
@@ -13,15 +16,23 @@ namespace Apieducation.Controllers
     {
         private readonly OllamaService _ollama;
         private readonly ILogger<AIController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public AIController(OllamaService ollama, ILogger<AIController> logger)
+        public AIController(
+            OllamaService ollama,
+            ILogger<AIController> logger,
+            IUnitOfWork unitOfWork,
+            IMapper mapper)
         {
             _ollama = ollama;
             _logger = logger;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         [HttpPost("chat")]
-        public async Task<IActionResult> Chat([FromBody] UserChatRequest request)
+        public async Task<IActionResult> Chat([FromBody] UserChatRequestDto request)
         {
             var prompt = $@"
 Eres un asistente educativo que RESPONDE SÓLO EN EL IDIOMA EN EL CUAL FUE HECHA LA PREGUNTA. RESPONDE ÚNICAMENTE UN OBJETO JSON VÁLIDO y NADA MÁS. No incluyas explicaciones, advertencias, ni texto libre fuera del JSON. El JSON debe seguir exactamente este formato:
@@ -34,7 +45,7 @@ Eres un asistente educativo que RESPONDE SÓLO EN EL IDIOMA EN EL CUAL FUE HECHA
 
 Reglas:
 1) Si la pregunta es educativa, devuelve allow = true, topic = nombre del tema y answer = explicación didáctica en el idioma en el cual se hizo la pregunta.
-2) Si la pregunta NO es educativa, devuelve allow = false, topic = null y answer = null.
+2) Si la pregunta NO es educativa (opiniones, gustos personales, entretenimiento, cultura popular no académica, debates subjetivos, predicciones, adivinanzas), devuelve allow = false, topic = null y answer = null.
 3) Si por alguna razón no puedes procesar, devuelve allow = false, topic = null, answer = null.
 4) NO uses mayúsculas innecesarias, NO incluyas comentarios, NO pongas texto adicional.
 5) Si corresponde, puedes añadir un ejemplo práctico en la respuesta, para reforzar la comprensión.
@@ -43,7 +54,6 @@ Pregunta: {request.Question}
 ";
 
             var responseString = await _ollama.AskAsync(prompt);
-
             _logger.LogInformation("IA - respuesta cruda: {Response}", responseString);
 
             if (JsonHelpers.TryExtractJson(responseString, out var json))
@@ -69,21 +79,43 @@ Pregunta: {request.Question}
                         });
                     }
 
+                    
+                    var existing = (await _unitOfWork.Progress.GetAllAsync())
+                        .FirstOrDefault(p => p.UserMemberId == request.User.Id && p.Topic == topic);
+
+                    if (existing == null)
+                    {
+                        existing = new Progress
+                        {
+                            UserMemberId = request.User.Id,
+                            Topic = topic,
+                            Score = 0,
+                            Feedback = $"Tema iniciado el {DateTime.UtcNow}"
+                        };
+                        _unitOfWork.Progress.Add(existing);
+                    }
+                    else
+                    {
+                        existing.Feedback = $"Última interacción: {DateTime.UtcNow}";
+                        _unitOfWork.Progress.Update(existing);
+                    }
+
+                    await _unitOfWork.SaveAsync();
+
                     return Ok(new
                     {
                         user = request.User.FullName,
                         question = request.Question,
                         topic,
-                        answer
+                        answer,
+                        progressId = existing.Id
                     });
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Error al parsear el JSON extraído. JSON: {Json}", json);
-                   
                 }
             }
-
 
             try
             {
@@ -130,10 +162,4 @@ Pregunta: {request.Question}
         }
     }
 
-    public class UserChatRequest
-    {
-        public UserMemberDto User { get; set; } = null!;
-        public List<ProgressDto> Progress { get; set; } = new();
-        public string Question { get; set; } = string.Empty;
-    }
 }

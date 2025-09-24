@@ -8,6 +8,6 @@ namespace Application.Interfaces
 {
     public interface IFlashcardRepository : IGenericRepository <Flashcard>
     {
-        
+        Task<List<Flashcard>> GetByProgressIdAsync(int progressId);
     }
 }

@@ -15,7 +15,6 @@ namespace ApiPortfolio.Extensions;
 
 public static class ApplicationServiceExtensions
 {
-    // Configuración de CORS
     public static void ConfigureCors(this IServiceCollection services) =>
         services.AddCors(options =>
         {
@@ -25,14 +24,14 @@ public static class ApplicationServiceExtensions
                        .AllowAnyHeader());
         });
 
-    // Registro de servicios de la aplicación
     public static void AddAplicacionServices(this IServiceCollection services)
     {
         services.AddScoped(typeof(IGenericRepository<>), typeof(Infrastructure.Repositories.GenericRepository<>));
         services.AddScoped<IProgressRepository, Infrastructure.Repositories.ProgressRepository>();
         services.AddScoped<IUserMemberRepository, Infrastructure.Repositories.UserMemberRepository>();
+        services.AddScoped<IEvaluationSessionRepository, Infrastructure.Repositories.EvaluationSessionRepository>();
+        services.AddScoped<IFlashcardRepository, Infrastructure.Repositories.FlashcardRepository>();
 
-        // JWT y autenticación
         services.AddScoped<IPasswordHasher<UserMember>, PasswordHasher<UserMember>>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
@@ -40,7 +39,6 @@ public static class ApplicationServiceExtensions
 
     }
 
-    // Configuración del rate limiter
     public static IServiceCollection AddCustomRateLimiter(this IServiceCollection services)
     {
         services.AddRateLimiter(options =>
@@ -70,7 +68,6 @@ public static class ApplicationServiceExtensions
         return services;
     }
 
-    // Configuración de JWT
 public static void AddJwt(this IServiceCollection services, IConfiguration configuration)
 {
     var jwtSettings = new JWT();
@@ -97,7 +94,6 @@ public static void AddJwt(this IServiceCollection services, IConfiguration confi
 }
 
 
-    // Configuración de errores de validación
     public static void AddValidationErrors(this IServiceCollection services)
     {
         services.Configure<ApiBehaviorOptions>(options =>

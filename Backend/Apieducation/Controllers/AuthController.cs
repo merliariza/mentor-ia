@@ -29,14 +29,14 @@ namespace ApiPortfolio.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Verificar si ya existe el correo
+            
             var exists = await _context.UserMembers.AnyAsync(u => u.Email == request.Email);
             if (exists)
             {
                 return BadRequest(new { Message = "El usuario ya existe." });
             }
 
-            // Crear nuevo usuario
+            
             var user = new UserMember
             {
                 FullName = request.FullName,
@@ -69,7 +69,7 @@ namespace ApiPortfolio.Controllers
                 });
             }
 
-            // Verificar la contraseña
+            
             if (!BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
             {
                 return Unauthorized(new DataUserDto
@@ -80,7 +80,6 @@ namespace ApiPortfolio.Controllers
                 });
             }
 
-            // Generar token
             var token = GenerateJwtToken(user);
 
             var response = new DataUserDto

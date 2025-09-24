@@ -18,6 +18,8 @@ namespace Infrastructure.Data
 
         public DbSet<UserMember> UserMembers { get; set; }
         public DbSet<Progress> Progresses { get; set; }
+        public DbSet<EvaluationSession> EvaluationSessions { get; set; }
+        public DbSet<Flashcard> Flashcards { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -8,6 +8,6 @@ namespace Application.Interfaces
 {
     public interface IProgressRepository : IGenericRepository <Progress>
     {
-        
+        Task<Progress?> GetWithSessionsAsync(int id);
     }
 }

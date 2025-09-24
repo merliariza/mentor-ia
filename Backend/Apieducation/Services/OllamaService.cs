@@ -19,9 +19,9 @@ namespace Application.Services
         {
             var request = new
             {
-                model = "llama3", // 👈 asegúrate que tienes este modelo descargado en Ollama
+                model = "llama3", 
                 prompt = prompt,
-                stream = false    // para recibir toda la respuesta de una vez
+                stream = false   
             };
 
             var content = new StringContent(
@@ -35,13 +35,9 @@ namespace Application.Services
 
             var json = await response.Content.ReadAsStringAsync();
 
-            // Ollama responde con algo como:
-            // { "model":"llama3", "created_at":"...", "response":"{ \"allow\": true, \"topic\": \"Fotosíntesis\", \"answer\": \"...\" }", "done":true }
-
             using var doc = JsonDocument.Parse(json);
             var root = doc.RootElement;
 
-            // El campo que nos interesa es "response", porque allí viene la respuesta de la IA
             var result = root.GetProperty("response").GetString();
 
             return result ?? "";
