@@ -11,6 +11,8 @@ public class UnitOfWork : IUnitOfWork,IDisposable
     private IProgressRepository? _progress;
 
     public IUserMemberRepository? _userMember;
+    public IEvaluationSessionRepository? _evaluationSession;
+    public IFlashcardRepository? _flashcard;
 
     public UnitOfWork(PublicDbContext context)
     {
@@ -37,6 +39,28 @@ public class UnitOfWork : IUnitOfWork,IDisposable
                 _userMember = new UserMemberRepository(_context);
             }
             return _userMember;
+        }
+    }
+
+    public IEvaluationSessionRepository EvaluationSession{
+        get
+        {
+            if (_evaluationSession == null)
+            {
+                _evaluationSession = new EvaluationSessionRepository(_context);
+            }
+            return _evaluationSession;
+        }
+    }
+
+    public IFlashcardRepository Flashcard{
+        get
+        {
+            if (_flashcard == null)
+            {
+                _flashcard = new FlashcardRepository(_context);
+            }
+            return _flashcard;
         }
     }
 

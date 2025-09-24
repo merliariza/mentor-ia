@@ -28,6 +28,10 @@ namespace Infrastructure.Data.Configuration
                 .WithMany(u => u.Progresses)
                 .HasForeignKey(p => p.UserMemberId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasMany(p => p.EvaluationSessions)
+                .WithOne(es => es.Progress)
+                .HasForeignKey(es => es.ProgressId);
         }
     }
 }

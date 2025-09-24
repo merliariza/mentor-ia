@@ -14,6 +14,8 @@ namespace Apieducation.Profiles
         {
             CreateMap<Progress, ProgressDto>().ReverseMap();
             CreateMap<UserMember, UserMemberDto>().ReverseMap();
+            CreateMap<EvaluationSession, EvaluationSessionDto>().ReverseMap();
+            CreateMap<Flashcard, FlashcardDto>().ReverseMap();
         }
     }
 }

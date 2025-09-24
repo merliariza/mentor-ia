@@ -12,6 +12,7 @@ namespace Application.Services
         public OllamaService(HttpClient http)
         {
             _http = http;
+            _http.Timeout = TimeSpan.FromMinutes(5);
         }
 
         public async Task<string> AskAsync(string prompt)

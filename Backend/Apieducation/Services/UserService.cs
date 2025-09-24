@@ -79,9 +79,9 @@ public class UserService : IUserService
         resultDto.Token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
         resultDto.Email = user.Email;
         resultDto.Name = user.FullName;
-        resultDto.UserName = user.Email; // Como no tienes Username, uso Email
+        resultDto.UserName = user.Email;
 
-        // manejar refresh
+
         var activeRefreshToken = user.RefreshTokens?.FirstOrDefault(t => t.IsActive);
         if (activeRefreshToken != null)
         {
@@ -123,14 +123,12 @@ public class UserService : IUserService
             return result;
         }
 
-        // revocar el viejo y crear uno nuevo
         tokenDb.Revoked = DateTime.UtcNow;
         var newToken = CreateRefreshToken();
         user.RefreshTokens!.Add(newToken);
         _unitOfWork.UserMember.Update(user);
         await _unitOfWork.SaveAsync();
 
-        // crear nuevo JWT
         var jwtToken = CreateJwtToken(user);
 
         result.IsAuthenticated = true;
@@ -155,7 +153,6 @@ public class UserService : IUserService
             new Claim(JwtRegisteredClaimNames.Email, user.Email!),
             new Claim("uid", user.Id.ToString()),
 
-            // único rol: Admin
             new Claim("roles", "Admin")
         };
 

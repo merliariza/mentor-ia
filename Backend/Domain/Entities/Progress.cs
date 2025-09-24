@@ -12,5 +12,7 @@ namespace Domain.Entities
         public string? Feedback { get; set; }
         public int UserMemberId { get; set; }
         public UserMember? UserMember { get; set; }
+
+        public ICollection<EvaluationSession> EvaluationSessions { get; set; } = new List<EvaluationSession>();
     }
 }

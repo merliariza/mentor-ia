@@ -37,6 +37,7 @@ Reglas:
 2) Si la pregunta NO es educativa, devuelve allow = false, topic = null y answer = null.
 3) Si por alguna razón no puedes procesar, devuelve allow = false, topic = null, answer = null.
 4) NO uses mayúsculas innecesarias, NO incluyas comentarios, NO pongas texto adicional.
+5) Si corresponde, puedes añadir un ejemplo práctico en la respuesta, para reforzar la comprensión.
 Usuario: {request.User.FullName}
 Pregunta: {request.Question}
 ";

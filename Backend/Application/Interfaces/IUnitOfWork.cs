@@ -9,7 +9,8 @@ namespace Application.Interfaces
     {
         IUserMemberRepository UserMember { get; }
         IProgressRepository Progress { get; }
-        
+        IFlashcardRepository Flashcard { get; }
+        IEvaluationSessionRepository EvaluationSession { get; }
         Task<int> SaveAsync(); 
     }
 }
