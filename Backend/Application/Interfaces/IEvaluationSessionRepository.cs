@@ -8,6 +8,6 @@ namespace Application.Interfaces
 {
     public interface IEvaluationSessionRepository : IGenericRepository <EvaluationSession>
     {
-        
+        Task<List<EvaluationSession>> GetByProgressIdAsync(int progressId);
     }
 }

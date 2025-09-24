@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using Application.Services;
 using Domain.Entities;
 using Application.Interfaces;
+using Application.DTOs;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using Application.DTOs;
 
 namespace Apieducation.Controllers
 {
@@ -22,26 +22,22 @@ namespace Apieducation.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        
         private string ExtractJson(string input)
         {
             var match = Regex.Match(input, @"\{.*\}", RegexOptions.Singleline);
             return match.Success ? match.Value : input;
         }
 
-       
         [HttpPost("generate-quiz/{progressId}")]
         public async Task<IActionResult> GenerateQuiz(int progressId)
         {
-            var progress = await _unitOfWork.Progress.GetByIdAsync(progressId);
-
+            var progress = await _unitOfWork.Progress.GetWithSessionsAsync(progressId);
             if (progress == null)
                 return NotFound("Progress no encontrado");
 
             var prompt = $@"
 Eres un asistente educativo. Genera un cuestionario en JSON para el tema: {progress.Topic}.
 El JSON debe tener el formato EXACTO:
-
 {{
   ""questions"": [
     {{
@@ -51,7 +47,6 @@ El JSON debe tener el formato EXACTO:
     }}
   ]
 }}
-
 Reglas:
 - Genera entre 3 y 5 preguntas.
 - Usa el idioma del tema tanto en las preguntas como en las opciones.
@@ -59,8 +54,6 @@ Reglas:
 - Solo devuelve JSON válido, nada más.";
 
             var rawResponse = await _ollama.AskAsync(prompt);
-
-          
             var jsonPart = ExtractJson(rawResponse);
 
             try
@@ -68,17 +61,14 @@ Reglas:
                 using var doc = JsonDocument.Parse(jsonPart);
                 var root = doc.RootElement;
 
-                var quizResult = new
-                {
-                    questions = root.GetProperty("questions")
+                var quizResult = root.GetProperty("questions")
                                     .EnumerateArray()
                                     .Select(q => new
                                     {
-                                        question = q.GetProperty("question").GetString(),
-                                        options = q.GetProperty("options").EnumerateArray().Select(o => o.GetString()).ToList(),
-                                        correctAnswer = q.GetProperty("correctAnswer").GetString()
-                                    }).ToList()
-                };
+                                        Question = q.GetProperty("question").GetString(),
+                                        Options = q.GetProperty("options").EnumerateArray().Select(o => o.GetString()).ToList(),
+                                        CorrectAnswer = q.GetProperty("correctAnswer").GetString()
+                                    }).ToList();
 
                 return Ok(quizResult);
             }
@@ -92,7 +82,6 @@ Reglas:
         public async Task<IActionResult> SubmitQuiz([FromBody] QuizSubmissionDto submission)
         {
             var progress = await _unitOfWork.Progress.GetWithSessionsAsync(submission.ProgressId);
-
             if (progress == null)
                 return NotFound("Progress no encontrado");
 
@@ -113,30 +102,45 @@ Reglas:
             };
 
             _unitOfWork.EvaluationSession.Add(session);
+            await _unitOfWork.SaveAsync();
+            var allSessions = await _unitOfWork.EvaluationSession.GetByProgressIdAsync(progress.Id);
+            progress.Score = (int)Math.Round(allSessions.Average(s => s.Score));
+            progress.Feedback = progress.Score >= 70
+                ? "¡Buen desempeño general! Sigue así."
+                : "Necesitas repasar un poco más en general.";
 
-            progress.Score = session.Score;
-            progress.Feedback = session.Feedback;
             _unitOfWork.Progress.Update(progress);
-
             await _unitOfWork.SaveAsync();
 
             return Ok(new
             {
-                progressId = progress.Id,
-                sessionId = session.Id,
-                session.Score,
-                session.Feedback
+                ProgressId = progress.Id,
+                SessionId = session.Id,
+                SessionScore = session.Score,
+                SessionFeedback = session.Feedback,
+                ProgressScore = progress.Score,
+                ProgressFeedback = progress.Feedback
             });
         }
 
         [HttpGet("flashcards/{progressId}")]
         public async Task<IActionResult> GetFlashcards(int progressId)
         {
+            var progress = await _unitOfWork.Progress.GetByIdAsync(progressId);
+            if (progress == null)
+                return NotFound("Progress no encontrado");
+
             var flashcards = await _unitOfWork.Flashcard.GetByProgressIdAsync(progressId);
-            var result = flashcards.Select(f => new { f.Question, f.Answer }).ToList();
+
+            var result = flashcards.Select(f => new
+            {
+                f.Id,
+                f.Question,
+                f.Answer,
+                EvaluationSessionId = f.EvaluationSessionId
+            }).ToList();
+
             return Ok(result);
         }
     }
-
-
 }
