@@ -11,7 +11,12 @@ namespace Infrastructure.Repositories
     public class FlashcardRepository : GenericRepository<Flashcard>, IFlashcardRepository
     {
         public FlashcardRepository(PublicDbContext context) : base(context) { }
-
+        public async Task<IEnumerable<Flashcard>> GetByEvaluationSessionIdAsync(int sessionId)
+        {
+            return await _context.Flashcards
+                .Where(f => f.EvaluationSessionId == sessionId)
+                .ToListAsync();
+        }
         public async Task<List<Flashcard>> GetByProgressIdAsync(int progressId)
         {
             return await _context.Flashcards

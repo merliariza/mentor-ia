@@ -20,7 +20,7 @@ namespace Infrastructure.Repositories
         public async Task<List<EvaluationSession>> GetByProgressIdAsync(int progressId)
         {
             return await _context.EvaluationSessions
-                .Include(es => es.Flashcards)  // Incluye flashcards de cada sesión
+                .Include(es => es.Flashcards)  
                 .Where(es => es.ProgressId == progressId)
                 .ToListAsync();
         }
