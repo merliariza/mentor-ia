@@ -1,0 +1,34 @@
+# Visual Studio
+.vs/
+bin/
+obj/
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.*
+
+# Node
+node_modules/
+
+# React/Vite
+dist/
+
+# User files
+*.user
+*.suo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# appsettings
+appsettings.Development.json

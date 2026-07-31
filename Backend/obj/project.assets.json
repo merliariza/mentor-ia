@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\merli\\developer\\education\\Backend\\education.csproj",
+      "projectUniqueName": "C:\\Users\\merli\\developer\\mentor-ia\\Backend\\education.csproj",
       "projectName": "education",
-      "projectPath": "C:\\Users\\merli\\developer\\education\\Backend\\education.csproj",
+      "projectPath": "C:\\Users\\merli\\developer\\mentor-ia\\Backend\\education.csproj",
       "packagesPath": "C:\\Users\\merli\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\merli\\developer\\education\\Backend\\obj\\",
+      "outputPath": "C:\\Users\\merli\\developer\\mentor-ia\\Backend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\merli\\AppData\\Roaming\\NuGet\\NuGet.Config"

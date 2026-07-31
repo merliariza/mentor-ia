@@ -13,12 +13,12 @@ namespace Apieducation.Controllers
     [Route("api/[controller]")]
     public class EvaluationController : ControllerBase
     {
-        private readonly OllamaService _ollama;
+        private readonly OpenRouterService _ai;
         private readonly IUnitOfWork _unitOfWork;
 
-        public EvaluationController(OllamaService ollama, IUnitOfWork unitOfWork)
+        public EvaluationController(OpenRouterService ai, IUnitOfWork unitOfWork)
         {
-            _ollama = ollama;
+            _ai = ai;
             _unitOfWork = unitOfWork;
         }
 
@@ -35,25 +35,25 @@ namespace Apieducation.Controllers
             if (progress == null)
                 return NotFound("Progress no encontrado");
 
-            var prompt = $@"
-Eres un asistente educativo. Genera un cuestionario en JSON para el tema: {progress.Topic}.
-El JSON debe tener el formato EXACTO:
-{{
-  ""questions"": [
-    {{
-      ""question"": ""¿Cuál es la capital de Francia?"",
-      ""options"": [""París"", ""Roma"", ""Madrid"", ""Londres""],
-      ""correctAnswer"": ""París""
-    }}
-  ]
-}}
-Reglas:
-- Genera entre 3 y 5 preguntas.
-- Usa el idioma del tema tanto en las preguntas como en las opciones.
-- Opciones deben ser plausibles.
-- Solo devuelve JSON válido, nada más.";
+        var prompt = $@"
+        Eres un asistente educativo. Genera un cuestionario en JSON para el tema: {progress.Topic}.
+        El JSON debe tener el formato EXACTO:
+        {{
+        ""questions"": [
+            {{
+            ""question"": ""¿Cuál es la capital de Francia?"",
+            ""options"": [""París"", ""Roma"", ""Madrid"", ""Londres""],
+            ""correctAnswer"": ""París""
+            }}
+        ]
+        }}
+        Reglas:
+        - Genera entre 3 y 5 preguntas.
+        - Usa el idioma del tema tanto en las preguntas como en las opciones.
+        - Opciones deben ser plausibles.
+        - Solo devuelve JSON válido, nada más.";
 
-            var rawResponse = await _ollama.AskAsync(prompt);
+            var rawResponse = await _ai.AskAsync(prompt);
             var jsonPart = ExtractJson(rawResponse);
 
             try

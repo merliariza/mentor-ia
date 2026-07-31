@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAutoMapper(Assembly.GetEntryAssembly());
-builder.Services.AddHttpClient<Application.Services.OllamaService>();
+builder.Services.AddHttpClient<Application.Services.OpenRouterService>();
 
 
 builder.Services.ConfigureCors();

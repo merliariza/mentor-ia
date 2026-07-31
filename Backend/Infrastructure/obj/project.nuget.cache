@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "HSaHFzrYWQ0=",
+  "dgSpecHash": "NUUZtkGoJds=",
   "success": true,
-  "projectFilePath": "C:\\Users\\merli\\developer\\education\\Backend\\Infrastructure\\Infrastructure.csproj",
+  "projectFilePath": "C:\\Users\\merli\\developer\\mentor-ia\\Backend\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\merli\\.nuget\\packages\\automapper\\14.0.0\\automapper.14.0.0.nupkg.sha512",
     "C:\\Users\\merli\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",

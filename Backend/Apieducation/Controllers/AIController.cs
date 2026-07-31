@@ -14,18 +14,18 @@ namespace Apieducation.Controllers
     [Route("api/[controller]")]
     public class AIController : ControllerBase
     {
-        private readonly OllamaService _ollama;
+        private readonly OpenRouterService _ai;
         private readonly ILogger<AIController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
 
         public AIController(
-            OllamaService ollama,
+            OpenRouterService ai,
             ILogger<AIController> logger,
             IUnitOfWork unitOfWork,
             IMapper mapper)
         {
-            _ollama = ollama;
+            _ai = ai;
             _logger = logger;
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -34,27 +34,58 @@ namespace Apieducation.Controllers
         [HttpPost("chat")]
         public async Task<IActionResult> Chat([FromBody] UserChatRequestDto request)
         {
-            var prompt = $@"
-Eres un asistente educativo que RESPONDE SÓLO EN EL IDIOMA EN EL CUAL FUE HECHA LA PREGUNTA. RESPONDE ÚNICAMENTE UN OBJETO JSON VÁLIDO y NADA MÁS. No incluyas explicaciones, advertencias, ni texto libre fuera del JSON. El JSON debe seguir exactamente este formato:
+        var prompt = $@"
+        Eres un mentor educativo cuyo objetivo es enseñar de forma clara, precisa y didáctica.
 
-{{
-  ""allow"": true|false,
-  ""topic"": string|null,
-  ""answer"": string|null
-}}
+        Responde SIEMPRE en el mismo idioma en el que fue realizada la pregunta.
 
-Reglas:
-1) Si la pregunta es educativa, devuelve allow = true, topic = nombre del tema y answer = explicación didáctica en el idioma en el cual se hizo la pregunta.
-2) Si la pregunta NO es educativa (opiniones, gustos personales, entretenimiento, cultura popular no académica, debates subjetivos, predicciones, adivinanzas), devuelve allow = false, topic = null y answer = null.
-3) Si por alguna razón no puedes procesar, devuelve allow = false, topic = null, answer = null.
-4) NO uses mayúsculas innecesarias, NO incluyas comentarios, NO pongas texto adicional.
-5) Si corresponde, puedes añadir un ejemplo práctico en la respuesta, para reforzar la comprensión.
-Usuario: {request.User.FullName}
-Pregunta: {request.Question}
-";
+        Adapta la explicación para un estudiante de nivel principiante, intermedio o avanzado según la complejidad de la pregunta.
 
-            var responseString = await _ollama.AskAsync(prompt);
-            _logger.LogInformation("IA - respuesta cruda: {Response}", responseString);
+        Devuelve ÚNICAMENTE un objeto JSON válido. No escribas texto adicional, explicaciones fuera del JSON ni bloques Markdown.
+
+        El formato debe ser exactamente:
+
+        {{
+        ""allow"": true|false,
+        ""topic"": string|null,
+        ""answer"": string|null
+        }}
+
+        Reglas:
+
+        1. Si la pregunta es educativa:
+        - allow = true
+        - topic = nombre del tema principal.
+        - answer = explicación clara, organizada y fácil de entender.
+
+        2. La respuesta debe:
+        - Comenzar con una explicación sencilla del concepto.
+        - Incluir un ejemplo práctico cuando sea útil.
+        - Si el ejemplo contiene código, este debe ser completo, correcto y sin caracteres extraños.
+        - No inventar nombres, librerías o información que no exista.
+        - Utilizar Markdown dentro del campo ""answer"" para mejorar la lectura (títulos, listas y bloques de código).
+
+        3. Si la pregunta NO es educativa (opiniones personales, entretenimiento, cultura popular no académica, debates subjetivos, predicciones o adivinanzas):
+        - allow = false
+        - topic = null
+        - answer = null
+
+        4. Si no puedes responder por cualquier motivo:
+        - allow = false
+        - topic = null
+        - answer = null
+
+        5. No agregues propiedades adicionales al JSON.
+
+        Usuario: {request.User.FullName}
+
+        Pregunta:
+        {request.Question}";
+
+            var responseString = await _ai.AskAsync(prompt);
+
+            _logger.LogInformation("= RESPUESTA IA =");
+            _logger.LogInformation("{Response}", responseString);
 
             if (JsonHelpers.TryExtractJson(responseString, out var json))
             {
@@ -113,7 +144,9 @@ Pregunta: {request.Question}
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Error al parsear el JSON extraído. JSON: {Json}", json);
+                    _logger.LogWarning(ex, "No se pudo parsear la respuesta como JSON.");
+                    _logger.LogWarning("Respuesta recibida:");
+                    _logger.LogWarning(responseString);
                 }
             }
 
