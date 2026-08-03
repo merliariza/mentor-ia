@@ -1,1 +1,11 @@
-<p>chat works!</p>
+<div class="chat-page">
+
+  <app-conversation
+    [messages]="messages">
+  </app-conversation>
+  
+  <app-chat-input
+    (send)="addMessage($event)">
+  </app-chat-input>
+
+</div>

@@ -1,0 +1,123 @@
+.sidebar{
+
+    width:270px;
+
+    height:100vh;
+
+    background:#0f172a;
+
+    color:white;
+
+    display:flex;
+
+    flex-direction:column;
+
+    padding:24px;
+
+}
+
+.logo{
+
+    margin-bottom:32px;
+
+}
+
+.logo h2{
+
+    margin:0;
+
+}
+
+.logo span{
+
+    color:#94a3b8;
+
+    font-size:14px;
+
+}
+
+.new-chat{
+
+    background:#2563eb;
+
+    border:none;
+
+    color:white;
+
+    padding:14px;
+
+    border-radius:12px;
+
+    cursor:pointer;
+
+    margin-bottom:28px;
+
+}
+
+nav{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+nav a{
+
+    color:#cbd5e1;
+
+    text-decoration:none;
+
+    padding:12px;
+
+    border-radius:12px;
+
+    transition:.25s;
+
+}
+
+nav a:hover{
+
+    background:#1e293b;
+
+}
+
+.active{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.user{
+
+    margin-top:auto;
+
+    display:flex;
+
+    gap:12px;
+
+    align-items:center;
+
+}
+
+.avatar{
+
+    width:42px;
+
+    height:42px;
+
+    border-radius:50%;
+
+    background:#2563eb;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}

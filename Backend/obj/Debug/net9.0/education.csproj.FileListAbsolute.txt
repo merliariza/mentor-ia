@@ -3,3 +3,8 @@ C:\Users\merli\developer\education\Backend\obj\Debug\net9.0\education.AssemblyIn
 C:\Users\merli\developer\education\Backend\obj\Debug\net9.0\education.AssemblyInfo.cs
 C:\Users\merli\developer\education\Backend\obj\Debug\net9.0\education.csproj.CoreCompileInputs.cache
 C:\Users\merli\developer\education\Backend\obj\Debug\net9.0\education.sourcelink.json
+C:\Users\merli\developer\mentor-ia\Backend\obj\Debug\net9.0\education.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\merli\developer\mentor-ia\Backend\obj\Debug\net9.0\education.AssemblyInfoInputs.cache
+C:\Users\merli\developer\mentor-ia\Backend\obj\Debug\net9.0\education.AssemblyInfo.cs
+C:\Users\merli\developer\mentor-ia\Backend\obj\Debug\net9.0\education.csproj.CoreCompileInputs.cache
+C:\Users\merli\developer\mentor-ia\Backend\obj\Debug\net9.0\education.sourcelink.json

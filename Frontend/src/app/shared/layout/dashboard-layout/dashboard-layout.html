@@ -1,1 +1,29 @@
-<p>dashboard-layout works!</p>
+<div class="flex h-screen bg-slate-100">
+
+  <!-- Sidebar escritorio -->
+  <aside class="hidden lg:block">
+    <app-sidebar></app-sidebar>
+  </aside>
+
+  <!-- Contenido -->
+  <div class="flex min-w-0 flex-1 flex-col">
+
+    <app-topbar></app-topbar>
+
+    <main
+      class="flex-1 overflow-y-auto p-4 md:p-6 xl:p-8">
+
+      <router-outlet></router-outlet>
+
+    </main>
+
+  </div>
+
+</div>
+
+<!-- Sidebar móvil -->
+<div class="lg:hidden">
+
+  <app-sidebar></app-sidebar>
+
+</div>

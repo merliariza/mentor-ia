@@ -1,0 +1,16 @@
+<div class="conversation">
+
+  @for (message of messages; track $index) {
+
+    <div
+      class="message"
+      [class.user]="message.sender === 'user'"
+      [class.assistant]="message.sender === 'assistant'">
+
+      <markdown [data]="message.content"></markdown>
+
+    </div>
+
+  }
+
+</div>

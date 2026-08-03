@@ -1,4 +1,48 @@
-/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+:root {
+
+  /* Primary */
+
+  --primary: #2563EB;
+  --primary-hover: #1D4ED8;
+
+  /* Secondary */
+
+  --secondary: #7C3AED;
+
+  /* Accent */
+
+  --accent: #14B8A6;
+
+  /* Background */
+
+  --background: #F8FAFC;
+
+  /* Cards */
+
+  --surface: #FFFFFF;
+
+  /* Sidebar */
+
+  --sidebar: #0F172A;
+
+  --sidebar-hover: #1E293B;
+
+  /* Text */
+
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+
+  /* Borders */
+
+  --border: #E5E7EB;
+
+  /* Radius */
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+}

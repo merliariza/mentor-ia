@@ -1,0 +1,199 @@
+<div class="min-h-screen grid lg:grid-cols-2">
+
+  <!-- Panel izquierdo -->
+  <section class="hidden lg:flex flex-col justify-center bg-slate-900 text-white p-16">
+
+    <h1 class="text-5xl font-bold mb-6">
+
+      🧠 Mentor-IA
+
+    </h1>
+
+    <p class="text-xl text-slate-300 leading-9">
+
+      Aprende más rápido con inteligencia artificial.
+
+    </p>
+
+    <div class="mt-12 space-y-6">
+
+      <div class="flex items-start gap-4">
+
+        <div class="text-2xl">💬</div>
+
+        <div>
+
+          <h3 class="font-semibold">
+
+            Chat Inteligente
+
+          </h3>
+
+          <p class="text-slate-400">
+
+            Pregunta cualquier tema y obtén respuestas con ejemplos y código.
+
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="flex items-start gap-4">
+
+        <div class="text-2xl">🧠</div>
+
+        <div>
+
+          <h3 class="font-semibold">
+
+            Flashcards
+
+          </h3>
+
+          <p class="text-slate-400">
+
+            Memoriza conceptos importantes rápidamente.
+
+          </p>
+
+        </div>
+
+      </div>
+
+      <div class="flex items-start gap-4">
+
+        <div class="text-2xl">📝</div>
+
+        <div>
+
+          <h3 class="font-semibold">
+
+            Quiz
+
+          </h3>
+
+          <p class="text-slate-400">
+
+            Evalúa tus conocimientos en segundos.
+
+          </p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+  <!-- Panel derecho -->
+  <section class="flex items-center justify-center bg-slate-100 p-6">
+
+    <div class="w-full max-w-md rounded-3xl bg-white p-8 shadow-xl">
+
+      <h2 class="text-3xl font-bold text-slate-800">
+
+        Bienvenido 👋
+
+      </h2>
+
+      <p class="mt-2 text-slate-500">
+
+        Inicia sesión para continuar.
+
+      </p>
+
+      <form
+        class="mt-8 space-y-5"
+        [formGroup]="form"
+        (ngSubmit)="login()">
+
+        <!-- Email -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-medium">
+
+            Correo electrónico
+
+          </label>
+
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="correo@ejemplo.com"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
+
+        </div>
+
+        <!-- Password -->
+
+        <div>
+
+          <label class="mb-2 block text-sm font-medium">
+
+            Contraseña
+
+          </label>
+
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="********"
+            class="w-full rounded-xl border border-slate-300 px-4 py-3 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200">
+
+        </div>
+
+        <!-- Error -->
+
+        @if(error){
+
+          <div class="rounded-xl bg-red-50 p-3 text-sm text-red-600">
+
+            {{ error }}
+
+          </div>
+
+        }
+
+        <!-- Botón -->
+
+        <button
+          type="submit"
+          [disabled]="loading()"
+          class="w-full rounded-xl bg-indigo-600 py-3 font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50">
+
+          @if(loading()){
+
+            Iniciando sesión...
+
+          } @else {
+
+            Iniciar sesión
+
+          }
+
+        </button>
+
+      </form>
+
+      <p class="mt-8 text-center text-sm text-slate-500">
+
+        ¿No tienes una cuenta?
+
+        <a
+          routerLink="/register"
+          class="font-semibold text-indigo-600 hover:underline">
+
+          Regístrate
+
+        </a>
+
+      </p>
+
+    </div>
+
+  </section>
+
+</div>

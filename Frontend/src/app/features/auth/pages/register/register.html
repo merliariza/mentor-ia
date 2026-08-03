@@ -1,0 +1,184 @@
+<div class="min-h-screen flex items-center justify-center bg-slate-100 p-6">
+
+  <div class="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
+
+    <h1 class="text-3xl font-bold text-slate-800">
+      Crear cuenta
+    </h1>
+
+    <p class="mt-2 text-slate-500">
+      Regístrate para comenzar a usar Mentor-IA.
+    </p>
+
+    <form
+      class="mt-8 space-y-5"
+      [formGroup]="form"
+      (ngSubmit)="register()">
+
+      <!-- Nombre -->
+
+      <div>
+
+        <label class="mb-2 block text-sm font-medium">
+          Nombre completo
+        </label>
+
+        <input
+          type="text"
+          formControlName="fullName"
+          class="w-full rounded-xl border px-4 py-3 transition"
+          [class.border-red-500]="form.controls.fullName.invalid && form.controls.fullName.touched"
+          [class.border-slate-300]="!(form.controls.fullName.invalid && form.controls.fullName.touched)">
+
+        @if(form.controls.fullName.touched && form.controls.fullName.hasError('required')){
+
+          <p class="mt-1 text-sm text-red-500">
+            El nombre es obligatorio.
+          </p>
+
+        }
+
+      </div>
+
+
+      <!-- Email -->
+
+      <div>
+
+        <label class="mb-2 block text-sm font-medium">
+          Correo electrónico
+        </label>
+
+        <input
+          type="email"
+          formControlName="email"
+          class="w-full rounded-xl border px-4 py-3 transition"
+          [class.border-red-500]="form.controls.email.invalid && form.controls.email.touched"
+          [class.border-slate-300]="!(form.controls.email.invalid && form.controls.email.touched)">
+
+        @if(form.controls.email.touched && form.controls.email.hasError('required')){
+
+          <p class="mt-1 text-sm text-red-500">
+            El correo es obligatorio.
+          </p>
+
+        }
+
+        @if(form.controls.email.touched && form.controls.email.hasError('email')){
+
+          <p class="mt-1 text-sm text-red-500">
+            Ingresa un correo válido.
+          </p>
+
+        }
+
+      </div>
+
+
+      <!-- Password -->
+
+      <div>
+
+        <label class="mb-2 block text-sm font-medium">
+          Contraseña
+        </label>
+
+        <input
+          type="password"
+          formControlName="password"
+          class="w-full rounded-xl border px-4 py-3 transition"
+          [class.border-red-500]="form.controls.password.invalid && form.controls.password.touched"
+          [class.border-slate-300]="!(form.controls.password.invalid && form.controls.password.touched)">
+
+        @if(form.controls.password.touched && form.controls.password.hasError('required')){
+
+          <p class="mt-1 text-sm text-red-500">
+            La contraseña es obligatoria.
+          </p>
+
+        }
+
+        @if(form.controls.password.touched && form.controls.password.hasError('minlength')){
+
+          <p class="mt-1 text-sm text-red-500">
+            Debe tener mínimo 6 caracteres.
+          </p>
+
+        }
+
+      </div>
+
+
+      <!-- Confirm Password -->
+
+      <div>
+
+        <label class="mb-2 block text-sm font-medium">
+          Confirmar contraseña
+        </label>
+
+        <input
+          type="password"
+          formControlName="confirmPassword"
+          class="w-full rounded-xl border px-4 py-3 transition"
+          [class.border-red-500]="form.controls.confirmPassword.invalid && form.controls.confirmPassword.touched"
+          [class.border-slate-300]="!(form.controls.confirmPassword.invalid && form.controls.confirmPassword.touched)">
+
+        @if(form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')){
+
+          <p class="mt-1 text-sm text-red-500">
+            Debes confirmar la contraseña.
+          </p>
+
+        }
+
+      </div>
+
+
+      @if(error){
+
+        <div class="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+
+          {{ error }}
+
+        </div>
+
+      }
+
+
+      <button
+        type="submit"
+        [disabled]="loading()"
+        class="w-full rounded-xl bg-indigo-600 py-3 font-semibold text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-60">
+
+        @if(loading()){
+
+          Creando cuenta...
+
+        }@else{
+
+          Crear cuenta
+
+        }
+
+      </button>
+
+    </form>
+
+    <p class="mt-8 text-center text-sm text-slate-500">
+
+      ¿Ya tienes una cuenta?
+
+      <a
+        routerLink="/login"
+        class="font-semibold text-indigo-600 hover:underline">
+
+        Iniciar sesión
+
+      </a>
+
+    </p>
+
+  </div>
+
+</div>

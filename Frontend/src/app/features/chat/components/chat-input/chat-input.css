@@ -1,0 +1,25 @@
+.chat-input{
+
+    display:flex;
+
+    gap:12px;
+
+    padding:20px;
+
+}
+
+textarea{
+
+    flex:1;
+
+    min-height:70px;
+
+    resize:none;
+
+}
+
+button{
+
+    width:120px;
+
+}
