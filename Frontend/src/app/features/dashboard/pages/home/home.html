@@ -1,1 +1,484 @@
-<p>home works!</p>
+<div class="min-h-full bg-slate-50 p-4 sm:p-6 lg:p-8">
+
+  @if (loading()) {
+
+    <div class="flex min-h-[70vh] items-center justify-center">
+      <div class="flex flex-col items-center gap-4">
+        <div class="h-10 w-10 animate-spin rounded-full border-4 border-violet-100 border-t-violet-600"></div>
+
+        <p class="text-sm font-medium text-slate-500">
+          Cargando tu progreso...
+        </p>
+      </div>
+    </div>
+
+  } @else if (error()) {
+
+    <div class="flex min-h-[70vh] items-center justify-center">
+      <div class="max-w-md rounded-2xl border border-red-100 bg-white p-8 text-center shadow-sm">
+
+        <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-50 text-xl text-red-500">
+          !
+        </div>
+
+        <h2 class="mt-4 text-lg font-bold text-slate-900">
+          No pudimos cargar tu dashboard
+        </h2>
+
+        <p class="mt-2 text-sm leading-6 text-slate-500">
+          Ocurrió un problema al obtener tu información de aprendizaje.
+        </p>
+
+        <button
+          type="button"
+          (click)="loadDashboard()"
+          class="mt-5 rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-700">
+          Intentar nuevamente
+        </button>
+
+      </div>
+    </div>
+
+  } @else {
+
+    <div class="mx-auto max-w-7xl">
+
+      <section class="mb-8">
+        <p class="text-sm font-medium text-violet-600">
+          Tu progreso de aprendizaje
+        </p>
+
+        <h1 class="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+          Bienvenido, {{ dashboard()?.userName }}
+        </h1>
+
+        <p class="mt-2 text-sm text-slate-500 sm:text-base">
+          Todo tu aprendizaje, en un solo lugar.
+        </p>
+      </section>
+
+
+      <section class="mb-6 overflow-hidden rounded-3xl bg-linear-to-br from-violet-600 via-violet-600 to-indigo-600 p-6 text-white shadow-xl shadow-violet-100 sm:p-8">
+
+        <div class="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
+
+          <div class="max-w-2xl">
+
+            <div class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-xs font-medium">
+              <span class="h-2 w-2 rounded-full bg-emerald-300"></span>
+              Mentor-IA
+            </div>
+
+            @if (dashboard()?.currentTopic; as topic) {
+
+              <p class="text-sm font-medium text-violet-200">
+                Continúa con tu aprendizaje
+              </p>
+
+              <h2 class="mt-2 text-2xl font-bold sm:text-3xl">
+                {{ topic.topic }}
+              </h2>
+
+              <p class="mt-3 text-sm leading-6 text-violet-100">
+                Tu progreso actual en este tema es de
+                <strong>{{ topic.score }}%</strong>.
+              </p>
+
+              <div class="mt-6 h-2 overflow-hidden rounded-full bg-white/20">
+                <div
+                  class="h-full rounded-full bg-white transition-all"
+                  [style.width]="getProgressWidth(topic.score)">
+                </div>
+              </div>
+
+              <div class="mt-6 flex flex-wrap gap-3">
+
+                <button
+                  type="button"
+                  (click)="navigateToChat()"
+                  class="rounded-xl bg-white px-5 py-3 text-sm font-semibold text-violet-700 shadow-sm transition hover:bg-violet-50">
+                  Continuar con Mentor-IA
+                </button>
+
+                <button
+                  type="button"
+                  (click)="navigateToQuiz()"
+                  class="rounded-xl border border-white/30 bg-white/10 px-5 py-3 text-sm font-semibold text-white transition hover:bg-white/20">
+                  Practicar con un quiz
+                </button>
+
+              </div>
+
+            } @else {
+
+              <h2 class="text-2xl font-bold sm:text-3xl">
+                Empieza tu aprendizaje
+              </h2>
+
+              <p class="mt-3 max-w-xl text-sm leading-6 text-violet-100">
+                Todavía no tienes temas registrados. Habla con Mentor-IA para
+                comenzar a construir tu progreso.
+              </p>
+
+              <button
+                type="button"
+                (click)="navigateToChat()"
+                class="mt-6 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-violet-700 shadow-sm transition hover:bg-violet-50">
+                Comenzar una sesión
+              </button>
+
+            }
+
+          </div>
+
+          <div class="hidden h-32 w-32 shrink-0 items-center justify-center rounded-3xl bg-white/10 text-6xl backdrop-blur lg:flex">
+            ✦
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <section class="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
+
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+
+          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-violet-50 text-xl text-violet-600">
+            ◈
+          </div>
+
+          <p class="mt-5 text-3xl font-bold text-slate-900">
+            {{ dashboard()?.stats?.topics }}
+          </p>
+
+          <p class="mt-1 text-sm text-slate-500">
+            Temas estudiados
+          </p>
+
+        </article>
+
+
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+
+          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-xl text-emerald-600">
+            %
+          </div>
+
+          <p class="mt-5 text-3xl font-bold text-slate-900">
+            {{ dashboard()?.stats?.averageScore }}%
+          </p>
+
+          <p class="mt-1 text-sm text-slate-500">
+            Promedio general
+          </p>
+
+        </article>
+
+
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+
+          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-xl text-blue-600">
+            ✓
+          </div>
+
+          <p class="mt-5 text-3xl font-bold text-slate-900">
+            {{ dashboard()?.stats?.evaluations }}
+          </p>
+
+          <p class="mt-1 text-sm text-slate-500">
+            Evaluaciones realizadas
+          </p>
+
+        </article>
+
+
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+
+          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-amber-50 text-xl text-amber-600">
+            ▣
+          </div>
+
+          <p class="mt-5 text-3xl font-bold text-slate-900">
+            {{ dashboard()?.stats?.flashcards }}
+          </p>
+
+          <p class="mt-1 text-sm text-slate-500">
+            Flashcards generadas
+          </p>
+
+        </article>
+
+      </section>
+
+
+      <section class="grid grid-cols-1 gap-6 xl:grid-cols-3">
+
+        <div class="xl:col-span-2">
+
+          <div class="mb-4 flex items-center justify-between">
+
+            <div>
+              <h2 class="text-lg font-bold text-slate-900">
+                Tu aprendizaje
+              </h2>
+
+              <p class="mt-1 text-sm text-slate-500">
+                Tus temas y resultados más recientes
+              </p>
+            </div>
+
+            <button
+              type="button"
+              (click)="navigateToQuiz()"
+              class="text-sm font-semibold text-violet-600 transition hover:text-violet-700">
+              Practicar →
+            </button>
+
+          </div>
+
+
+          @if (dashboard()?.currentTopic; as topic) {
+
+            <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+
+              <div class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+
+                <div class="flex min-w-0 items-center gap-4">
+
+                  <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-violet-50 text-2xl text-violet-600">
+                    ◈
+                  </div>
+
+                  <div class="min-w-0">
+
+                    <span class="text-xs font-semibold uppercase tracking-wide text-violet-600">
+                      Tema actual
+                    </span>
+
+                    <h3 class="mt-1 truncate text-lg font-bold text-slate-900">
+                      {{ topic.topic }}
+                    </h3>
+
+                    <p class="mt-1 text-sm text-slate-500">
+                      {{ topic.feedback }}
+                    </p>
+
+                  </div>
+
+                </div>
+
+                <div class="shrink-0 text-left sm:text-right">
+
+                  <p class="text-2xl font-bold text-violet-600">
+                    {{ topic.score }}%
+                  </p>
+
+                  <p class="text-xs text-slate-400">
+                    progreso
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              <div class="mt-6 h-2 overflow-hidden rounded-full bg-slate-100">
+
+                <div
+                  class="h-full rounded-full bg-linear-to-r from-violet-600 to-indigo-500 transition-all"
+                  [style.width]="getProgressWidth(topic.score)">
+                </div>
+
+              </div>
+
+            </article>
+
+          } @else {
+
+            <article class="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center">
+
+              <div class="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-100 text-xl">
+                ◈
+              </div>
+
+              <h3 class="mt-4 font-semibold text-slate-900">
+                Aún no tienes progreso
+              </h3>
+
+              <p class="mx-auto mt-2 max-w-md text-sm text-slate-500">
+                Tu progreso aparecerá aquí después de aprender un tema con Mentor-IA.
+              </p>
+
+              <button
+                type="button"
+                (click)="navigateToChat()"
+                class="mt-5 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-700">
+                Comenzar a aprender
+              </button>
+
+            </article>
+
+          }
+
+        </div>
+
+
+        <article class="rounded-2xl border border-violet-100 bg-linear-to-br from-violet-50 via-white to-indigo-50 p-6 shadow-sm">
+
+          <div class="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-600 text-xl text-white shadow-lg shadow-violet-200">
+            ✦
+          </div>
+
+          <span class="mt-5 block text-xs font-semibold uppercase tracking-wider text-violet-600">
+            Mentor-IA
+          </span>
+
+          <h2 class="mt-1 text-xl font-bold text-slate-900">
+            Recomendación para ti
+          </h2>
+
+          <p class="mt-4 text-sm leading-6 text-slate-600">
+            {{ dashboard()?.recommendation }}
+          </p>
+
+          <button
+            type="button"
+            (click)="navigateToChat()"
+            class="mt-6 rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-700">
+            Hablar con Mentor-IA →
+          </button>
+
+        </article>
+
+      </section>
+
+
+      <section class="mt-6">
+
+        <article class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+
+          <div class="mb-5 flex items-center justify-between">
+
+            <div>
+              <h2 class="font-bold text-slate-900">
+                Evaluaciones recientes
+              </h2>
+
+              <p class="mt-1 text-sm text-slate-500">
+                Tus últimos resultados
+              </p>
+            </div>
+
+            <button
+              type="button"
+              (click)="navigateToQuiz()"
+              class="text-sm font-semibold text-violet-600">
+              Ver quizzes
+            </button>
+
+          </div>
+
+
+          @if (dashboard()?.recentSessions?.length) {
+
+            <div class="divide-y divide-slate-100">
+
+              @for (session of dashboard()?.recentSessions; track session.id) {
+
+                <div class="flex flex-col gap-3 py-4 first:pt-0 sm:flex-row sm:items-center sm:justify-between">
+
+                  <div class="flex min-w-0 items-center gap-4">
+
+                    <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-sm font-bold text-slate-600">
+                      {{ session.score }}
+                    </div>
+
+                    <div class="min-w-0">
+
+                      <p class="truncate text-sm font-semibold text-slate-800">
+                        {{ session.topic }}
+                      </p>
+
+                      <p class="mt-1 truncate text-xs text-slate-500">
+                        {{ session.feedback }}
+                      </p>
+
+                    </div>
+
+                  </div>
+
+                  <div class="flex items-center gap-3">
+
+                    <div class="h-2 w-24 overflow-hidden rounded-full bg-slate-100">
+
+                      <div
+                        class="h-full rounded-full bg-violet-500"
+                        [style.width]="getProgressWidth(session.score)">
+                      </div>
+
+                    </div>
+
+                    <span class="text-sm font-semibold text-slate-700">
+                      {{ session.score }}%
+                    </span>
+
+                  </div>
+
+                </div>
+
+              }
+
+            </div>
+
+          } @else {
+
+            <div class="rounded-xl bg-slate-50 px-5 py-8 text-center">
+
+              <p class="text-sm font-medium text-slate-500">
+                Todavía no tienes evaluaciones
+              </p>
+
+              <p class="mt-1 text-xs text-slate-400">
+                Cuando completes un quiz, tus resultados aparecerán aquí.
+              </p>
+
+            </div>
+
+          }
+
+        </article>
+
+      </section>
+
+
+      <section class="mt-6 flex flex-wrap gap-3">
+
+        <button
+          type="button"
+          (click)="navigateToChat()"
+          class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-violet-200 hover:text-violet-600">
+          Ir a Mentor-IA
+        </button>
+
+        <button
+          type="button"
+          (click)="navigateToQuiz()"
+          class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-violet-200 hover:text-violet-600">
+          Hacer un quiz
+        </button>
+
+        <button
+          type="button"
+          (click)="navigateToFlashcards()"
+          class="rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-violet-200 hover:text-violet-600">
+          Repasar flashcards
+        </button>
+
+      </section>
+
+    </div>
+
+  }
+
+</div>

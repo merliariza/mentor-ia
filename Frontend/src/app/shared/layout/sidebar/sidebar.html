@@ -1,52 +1,46 @@
 <!-- Fondo oscuro móvil -->
 @if(layout.sidebarOpen()){
 
-<div
-  class="fixed inset-0 z-40 bg-black/50 lg:hidden"
-  (click)="close()">
-</div>
+  <div
+    class="fixed inset-0 z-40 bg-black/50 lg:hidden"
+    (click)="close()">
+  </div>
 
 }
 
+
 <!-- Sidebar -->
 <aside
-
   class="fixed left-0 top-0 z-50 flex h-screen w-72
          -translate-x-full flex-col border-r border-slate-800
-         bg-slate-900 text-slate-100 shadow-2xl transition-transform duration-300
+         bg-slate-900 text-slate-100 shadow-2xl
+         transition-transform duration-300
          lg:static lg:translate-x-0"
-
   [class.translate-x-0]="layout.sidebarOpen()">
 
-  <!-- Logo -->
 
+  <!-- Logo -->
   <div class="border-b border-slate-800 p-6">
 
     <h1 class="text-2xl font-bold">
-
       Mentor-IA
-
     </h1>
 
     <p class="mt-1 text-sm text-slate-400">
-
-      AI Learning Assistant
-
+      Asistente de Aprendizaje
     </p>
 
   </div>
 
-  <!-- Nuevo chat -->
 
+  <!-- Nuevo chat -->
   <div class="p-4">
 
     <button
-
       routerLink="/chat"
-
       (click)="close()"
-
-      class="w-full rounded-xl bg-indigo-600 px-4 py-3 font-medium transition hover:bg-indigo-500">
+      class="w-full rounded-xl bg-indigo-600 px-4 py-3 font-medium
+             transition hover:bg-indigo-500">
 
       + Nuevo chat
 
@@ -54,61 +48,123 @@
 
   </div>
 
-  <!-- Navegación -->
 
+  <!-- Navegación -->
   <nav class="flex-1 space-y-2 px-4">
 
     @for(item of navigation; track item.route){
 
-    <a
+      <a
+        [routerLink]="item.route"
+        routerLinkActive="bg-indigo-600 text-white shadow"
+        (click)="close()"
+        class="flex items-center rounded-xl px-4 py-3
+               text-slate-300 transition duration-200
+               hover:bg-slate-800 hover:text-white">
 
-      [routerLink]="item.route"
+        {{item.label}}
 
-      routerLinkActive="bg-indigo-600 text-white shadow"
-
-      (click)="close()"
-
-      class="flex items-center rounded-xl px-4 py-3 text-slate-300 transition duration-200 hover:bg-slate-800 hover:text-white">
-
-      {{item.label}}
-
-    </a>
+      </a>
 
     }
 
   </nav>
 
+
   <!-- Usuario -->
+  <div class="relative border-t border-slate-800 p-4">
 
-  <div class="border-t border-slate-800 p-4">
+    <!-- Botón del usuario -->
+    <button
+      type="button"
+      (click)="toggleUserMenu()"
+      class="flex w-full items-center gap-3 rounded-2xl p-2
+             text-left transition hover:bg-slate-800">
 
-    <div class="flex items-center gap-3">
-
+      <!-- Avatar -->
       <div
+        class="flex h-11 w-11 shrink-0 items-center justify-center
+               rounded-full bg-gradient-to-br from-indigo-500 to-violet-600
+               font-bold text-white shadow-lg shadow-indigo-900/30">
 
-        class="flex h-11 w-11 items-center justify-center rounded-full bg-indigo-600 font-semibold">
-
-        M
+        {{ userInitial }}
 
       </div>
 
-      <div>
 
-        <p class="font-medium">
+      <!-- Información -->
+      <div class="min-w-0 flex-1">
 
-          Merli
+        <p class="truncate text-sm font-semibold text-white">
+
+          {{ userName }}
 
         </p>
 
-        <span class="text-sm text-slate-400">
+        <p class="truncate text-xs text-slate-400">
 
-          Student
+          {{ userEmail }}
 
-        </span>
+        </p>
 
       </div>
 
-    </div>
+
+      <!-- Flecha -->
+      <span
+        class="text-slate-400 transition-transform duration-200"
+        [class.rotate-180]="userMenuOpen">
+
+       ⌄
+
+      </span>
+
+    </button>
+
+
+    <!-- Menú -->
+    @if(userMenuOpen){
+
+      <div
+        class="absolute bottom-20 left-4 right-4 z-50
+               overflow-hidden rounded-2xl border border-slate-700
+               bg-slate-800 shadow-2xl">
+
+        <!-- Cabecera -->
+        <div class="border-b border-slate-700 px-4 py-3">
+
+          <p class="text-xs font-medium uppercase tracking-wider text-slate-400">
+            Cuenta
+          </p>
+
+          <p class="mt-1 truncate text-sm font-semibold text-white">
+            {{ userEmail }}
+          </p>
+
+        </div>
+
+
+        <!-- Cerrar sesión -->
+        <button
+          type="button"
+          (click)="logout()"
+          class="flex w-full items-center gap-3 px-4 py-3
+                 text-left text-sm font-medium text-red-400
+                 transition hover:bg-red-500/10 hover:text-red-300">
+
+          <span class="text-base">
+            ↪
+          </span>
+
+          <span>
+            Cerrar sesión
+          </span>
+
+        </button>
+
+      </div>
+
+    }
 
   </div>
 

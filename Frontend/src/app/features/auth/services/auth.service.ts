@@ -15,7 +15,6 @@ import { RegisterRequest } from '../models/register-request';
 })
 export class AuthService {
 
-
   private readonly http = inject(HttpClient);
 
 
@@ -38,9 +37,7 @@ export class AuthService {
   );
 
 
-
   login(request: LoginRequest) {
-
 
     return this.http
       .post<LoginResponse>(
@@ -60,9 +57,7 @@ export class AuthService {
   }
 
 
-
   register(request: RegisterRequest) {
-
 
     return this.http
       .post(
@@ -73,14 +68,11 @@ export class AuthService {
   }
 
 
-
   logout() {
-
 
     localStorage.removeItem('token');
 
     localStorage.removeItem('user');
-
 
     this.token.set(null);
 
@@ -89,11 +81,67 @@ export class AuthService {
   }
 
 
+  getCurrentUserId(): number | null {
+
+    const token = this.token();
+
+    if (!token) {
+
+      return null;
+
+    }
+
+
+    try {
+
+      const parts = token.split('.');
+
+      if (parts.length !== 3) {
+
+        return null;
+
+      }
+
+
+      const payload = JSON.parse(
+        atob(parts[1])
+      );
+
+
+      if (
+        payload.id === undefined ||
+        payload.id === null
+      ) {
+
+        return null;
+
+      }
+
+
+      const userId = Number(payload.id);
+
+
+      if (Number.isNaN(userId)) {
+
+        return null;
+
+      }
+
+
+      return userId;
+
+    } catch {
+
+      return null;
+
+    }
+
+  }
+
 
   private saveSession(
     response: LoginResponse
   ) {
-
 
     localStorage.setItem(
       'token',
@@ -119,9 +167,7 @@ export class AuthService {
   }
 
 
-
   private loadUser(): LoginResponse | null {
-
 
     const user =
       localStorage.getItem('user');
@@ -134,7 +180,17 @@ export class AuthService {
     }
 
 
-    return JSON.parse(user);
+    try {
+
+      return JSON.parse(user);
+
+    } catch {
+
+      localStorage.removeItem('user');
+
+      return null;
+
+    }
 
   }
 

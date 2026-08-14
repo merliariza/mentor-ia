@@ -25,4 +25,12 @@ export class TopbarComponent {
     return 'Buenas noches';
   }
 
+    get userInitial(): string {
+    const name = this.auth.currentUser()?.name;
+
+    return name
+      ? name.trim().charAt(0).toUpperCase()
+      : '?';
+  }
+
 }

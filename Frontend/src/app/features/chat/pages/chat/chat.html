@@ -1,11 +1,48 @@
-<div class="chat-page">
+<div class="flex h-full flex-col bg-slate-50">
 
+<!-- Mensajes -->
+<div class="min-h-0 flex-1 overflow-y-auto scroll-smooth">
   <app-conversation
     [messages]="messages">
   </app-conversation>
+</div>
+
   
-  <app-chat-input
-    (send)="addMessage($event)">
-  </app-chat-input>
+  <!-- Acciones -->
+  @if(lastResponse?.progressId){
+
+    <div
+      class="mx-auto flex w-full max-w-5xl flex-wrap justify-end gap-3 px-5 py-4">
+
+      <!-- Quiz -->
+      <button
+        type="button"
+        (click)="generateQuiz()"
+        [disabled]="quizState.loading()"
+        class="inline-flex items-center gap-2 rounded-xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-indigo-700 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0">
+
+        @if(quizState.loading()){
+
+          <span class="animate-pulse">Generando Quiz...</span>
+
+        }@else{
+
+          <span>📝</span>
+          <span>Generar Quiz</span>
+
+        }
+
+      </button>
+
+    </div>
+
+  }
+
+  <!-- Input del chat -->
+  <div class="border-t border-slate-200 bg-white">
+    <app-chat-input
+      (send)="addMessage($event)">
+    </app-chat-input>
+  </div>
 
 </div>
