@@ -36,7 +36,6 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers();
 app.UseCors("CorsPolicy");
-app.UseHttpsRedirection();
 app.UseRateLimiter();
 
 app.UseAuthentication();
