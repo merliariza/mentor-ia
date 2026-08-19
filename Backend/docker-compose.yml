@@ -1,39 +1,23 @@
 services:
 
-  postgres:
-    image: postgres:17
-    container_name: mentor-ia-db
-    environment:
-      POSTGRES_DB: education_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: mentoria123
-    ports:
-      - "5432:5432"
-    volumes:
-      - mentor_ia_postgres_data:/var/lib/postgresql/data
-
   api:
     build:
       context: .
       dockerfile: Dockerfile
     container_name: mentor-ia-api
-    depends_on:
-      - postgres
     ports:
       - "10000:10000"
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       ASPNETCORE_URLS: http://0.0.0.0:10000
 
-      ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=education_db;Username=postgres;Password=mentoria123
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection}
 
-      OpenRouter__ApiKey: ${OPENROUTER_API_KEY}
-      OpenRouter__Model: ${OPENROUTER_MODEL}
+      OpenRouter__ApiKey: ${OpenRouter__ApiKey}
+      OpenRouter__BaseUrl: ${OpenRouter__BaseUrl}
+      OpenRouter__Model: ${OpenRouter__Model}
 
-      Jwt__Key: ${JWT_KEY}
-      Jwt__Issuer: ${JWT_ISSUER}
-      Jwt__Audience: ${JWT_AUDIENCE}
-      Jwt__DurationInMinutes: ${JWT_DURATION}
-
-volumes:
-  mentor_ia_postgres_data:
+      Jwt__Key: ${Jwt__Key}
+      Jwt__Issuer: ${Jwt__Issuer}
+      Jwt__Audience: ${Jwt__Audience}
+      Jwt__DurationInMinutes: ${Jwt__DurationInMinutes}
