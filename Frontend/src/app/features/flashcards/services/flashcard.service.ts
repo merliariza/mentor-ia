@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Flashcard } from '../models/flashcard';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class FlashcardService {
     inject(HttpClient);
 
   private readonly api =
-    '${environment.apiUrl}/api/Evaluation';
+    `${environment.apiUrl}/api/Evaluation`;
 
 
   getFlashcards(

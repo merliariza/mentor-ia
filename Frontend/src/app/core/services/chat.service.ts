@@ -6,6 +6,7 @@ import { Observable, tap } from 'rxjs';
 import { ChatRequest } from '../models/chat-request';
 import { ChatResponse } from '../models/chat-response';
 import { ChatMessage } from '../models/chat-message';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class ChatService {
   private readonly http = inject(HttpClient);
 
   private readonly api =
-    '${environment.apiUrl}/api/AI/chat';
+    `${environment.apiUrl}/api/AI/chat`;
 
   readonly messages =
     signal<ChatMessage[]>([]);
