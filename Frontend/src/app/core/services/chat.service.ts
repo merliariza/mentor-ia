@@ -16,7 +16,7 @@ export class ChatService {
   private readonly http = inject(HttpClient);
 
   private readonly api =
-    `${environment.apiUrl}/api/AI/chat`;
+    `${environment.apiUrl}/AI/chat`;
 
   readonly messages =
     signal<ChatMessage[]>([]);

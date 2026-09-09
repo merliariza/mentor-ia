@@ -15,7 +15,7 @@ export class FlashcardService {
     inject(HttpClient);
 
   private readonly api =
-    `${environment.apiUrl}/api/Evaluation`;
+    `${environment.apiUrl}/Evaluation`;
 
 
   getFlashcards(

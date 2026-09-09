@@ -16,7 +16,7 @@ export class QuizService {
     inject(HttpClient);
 
   private readonly api =
-    `${environment.apiUrl}/api/Evaluation`;
+    `${environment.apiUrl}/Evaluation`;
 
   generateQuiz(
     progressId: number
