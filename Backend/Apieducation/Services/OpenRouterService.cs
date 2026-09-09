@@ -1,8 +1,6 @@
-using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
 
 namespace Application.Services
 {
@@ -30,9 +28,13 @@ namespace Application.Services
             _http.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", _apiKey);
 
-            _http.DefaultRequestHeaders.Add("HTTP-Referer", "http://localhost");
+            _http.DefaultRequestHeaders.Add(
+                "HTTP-Referer",
+                "http://localhost");
 
-            _http.DefaultRequestHeaders.Add("X-Title", "MENTOR-IA");
+            _http.DefaultRequestHeaders.Add(
+                "X-Title",
+                "MENTOR-IA");
         }
 
         public async Task<string> AskAsync(string prompt)
@@ -59,11 +61,16 @@ namespace Application.Services
                 "https://openrouter.ai/api/v1/chat/completions",
                 content);
 
-            response.EnsureSuccessStatusCode();
+            var responseBody =
+                await response.Content.ReadAsStringAsync();
 
-            var json = await response.Content.ReadAsStringAsync();
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception(
+                    $"OpenRouter error {(int)response.StatusCode}: {responseBody}");
+            }
 
-            using var doc = JsonDocument.Parse(json);
+            using var doc = JsonDocument.Parse(responseBody);
 
             var result = doc.RootElement
                 .GetProperty("choices")[0]
