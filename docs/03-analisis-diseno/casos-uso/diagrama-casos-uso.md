@@ -62,6 +62,8 @@ Sistema utilizado para almacenar y consultar la información persistente de Ment
 
 ## Diagrama
 
+![alt text](diagrama-casos-uso.png)
+
 ## Descripción general
 
 El diagrama de casos de uso representa las principales interacciones entre los actores y Mentor-IA.

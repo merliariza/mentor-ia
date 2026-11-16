@@ -38,9 +38,9 @@ El sistema utiliza una base de datos relacional para almacenar la información r
 
 El alcance contempla la utilización de Mentor-IA mediante un navegador web y su disponibilidad en un entorno desplegado.
 
-No forma parte del alcance una funcionalidad de historial de conversaciones para que el usuario consulte preguntas anteriores del chat. La interacción se centra en la consulta actual y en el proceso de aprendizaje asociado.
+Mentor-IA no dispone de una funcionalidad de almacenamiento y consulta de conversaciones anteriores. Las interacciones con el asistente se presentan durante la sesión de uso, sin ofrecer al usuario un módulo para recuperar conversaciones de consultas anteriores. Esta restricción no afecta el almacenamiento de los recursos de aprendizaje, resultados de evaluación y datos de progreso que forman parte de las funcionalidades implementadas.
 
-Tampoco se contempla dentro del alcance la gestión de múltiples historiales de evaluaciones como una funcionalidad independiente. El proceso se maneja sobre la evaluación correspondiente al proceso de aprendizaje vigente.
+La plataforma almacena la información relacionada con las evaluaciones y el progreso del usuario. Sin embargo, la interfaz actual permite consultar el resultado correspondiente a la evaluación más reciente y no contempla una sección independiente para consultar un historial de evaluaciones.
 
 ### 1.3 Definiciones, acrónimos y abreviaturas
 
@@ -181,7 +181,7 @@ Las principales funciones de Mentor-IA son:
 
 Es la persona que accede a Mentor-IA sin haber iniciado sesión.
 
-Puede acceder a las funcionalidades públicas de la aplicación, como la pantalla inicial y el registro.
+Puede acceder a las funcionalidades públicas de la aplicación, como el inicio de sesión y el registro. No puede acceder a funcionalidades que requieran autenticación.
 
 No puede acceder a funcionalidades que requieran autenticación.
 
@@ -505,7 +505,7 @@ La aplicación debe permitir que un usuario pueda comprender y utilizar las func
 
 ### RNF-004 - Rendimiento
 
-La aplicación debe proporcionar tiempos de respuesta adecuados para las operaciones realizadas por el usuario.
+La aplicación debe gestionar las solicitudes de manera que la interfaz permanezca operativa durante su procesamiento, informando al usuario cuando una operación se encuentre en curso.
 
 * La interfaz debe evitar bloqueos innecesarios durante las solicitudes.
 * Deben mostrarse estados de carga cuando una operación pueda tardar.

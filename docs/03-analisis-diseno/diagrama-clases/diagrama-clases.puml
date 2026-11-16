@@ -1,0 +1,56 @@
+@startuml
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+hide empty methods
+
+class BaseEntity {
+    +Id: int
+}
+
+class UserMember {
+    +FullName: string
+    +Email: string
+    +PasswordHash: string
+}
+
+class Progress {
+    +Score: int
+    +Topic: string
+    +Feedback: string
+    +UserMemberId: int
+}
+
+class EvaluationSession {
+    +Score: int
+    +Feedback: string
+    +ProgressId: int
+}
+
+class Flashcard {
+    +Question: string
+    +Answer: string
+    +EvaluationSessionId: int
+}
+
+class RefreshToken {
+    +MemberId: int
+    +Token: string
+    +Expires: DateTime
+    +Created: DateTime
+    +Revoked: DateTime?
+    +IsExpired: bool
+    +IsActive: bool
+}
+
+UserMember --|> BaseEntity
+Progress --|> BaseEntity
+EvaluationSession --|> BaseEntity
+Flashcard --|> BaseEntity
+RefreshToken --|> BaseEntity
+
+UserMember "1" -- "0..*" Progress : registra
+Progress "1" -- "0..*" EvaluationSession : contiene
+EvaluationSession "1" -- "0..*" Flashcard : genera
+UserMember "1" -- "0..*" RefreshToken : posee
+
+@enduml

@@ -1,0 +1,41 @@
+@startuml
+actor Usuario as U
+participant Frontend as F
+participant "AI Controller" as C
+participant "AI Service" as S
+participant OpenRouter as O
+participant "Unit of Work" as W
+participant "Progress Repository" as R
+database PostgreSQL as DB
+
+U -> F : Enviar consulta
+F -> C : Enviar solicitud
+C -> S : Procesar consulta
+S -> O : Enviar pregunta
+O --> S : Devolver respuesta
+S --> C : Entregar contenido
+
+C -> C : Interpretar respuesta
+
+alt Consulta permitida
+    C -> R : Buscar progreso
+    R -> DB : Consultar registro
+    DB --> R : Resultado
+    R --> C : Devolver progreso
+
+    alt No existe progreso
+        C -> R : Crear progreso
+    else Existe progreso
+        C -> R : Actualizar retroalimentacion
+    end
+
+    C -> W : Guardar cambios
+    W --> C : Confirmacion
+else Consulta no permitida
+    C -> C : Preparar mensaje educativo
+end
+
+C --> F : Devolver respuesta
+F --> U : Mostrar respuesta
+
+@enduml

@@ -1,0 +1,75 @@
+@startuml
+title Diagrama de Actividades - Mentor-IA
+
+|Usuario|
+start
+:Ingresar al panel principal;
+:Realizar consulta al asistente IA;
+
+|Mentor-IA|
+:Recibir y procesar la consulta;
+:Enviar solicitud al servicio de IA;
+
+|Servicio de IA|
+:Procesar la consulta;
+:Generar respuesta;
+
+|Mentor-IA|
+:Recibir respuesta;
+:Consultar o actualizar el progreso del usuario;
+
+|Base de datos|
+:Guardar información del progreso;
+
+|Mentor-IA|
+:Mostrar respuesta al usuario;
+
+|Usuario|
+:Consultar recursos de aprendizaje;
+
+|Mentor-IA|
+:Recuperar recursos asociados al usuario;
+
+|Base de datos|
+:Consultar recursos disponibles;
+
+|Mentor-IA|
+:Mostrar recursos;
+
+|Usuario|
+:Seleccionar actividad de aprendizaje;
+
+if (¿Qué actividad desea realizar?) then (Flashcards)
+  :Consultar flashcards;
+  |Mentor-IA|
+  :Mostrar flashcards disponibles;
+  |Usuario|
+  :Revisar flashcards;
+elseif (Cuestionario)
+  :Iniciar cuestionario;
+  |Mentor-IA|
+  :Mostrar preguntas;
+  |Usuario|
+  :Responder preguntas;
+  :Enviar respuestas;
+  |Mentor-IA|
+  :Procesar respuestas;
+  :Calcular resultado;
+  |Base de datos|
+  :Registrar resultado;
+  |Mentor-IA|
+  :Mostrar resultado;
+else (Progreso)
+  |Mentor-IA|
+  :Solicitar información de progreso;
+  |Base de datos|
+  :Consultar progreso registrado;
+  |Mentor-IA|
+  :Mostrar progreso;
+endif
+
+|Usuario|
+:Finalizar consulta de aprendizaje;
+stop
+
+@enduml

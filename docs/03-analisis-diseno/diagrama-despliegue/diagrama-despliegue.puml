@@ -1,0 +1,32 @@
+@startuml
+skinparam linetype ortho
+skinparam componentStyle rectangle
+
+actor Usuario
+
+node "Dispositivo del usuario" {
+    artifact "Navegador web" as Browser
+    artifact "Frontend Angular 20" as Frontend
+}
+
+cloud "Render" {
+    node "Entorno de despliegue" {
+        node "Backend ASP.NET Core .NET 9" as Backend {
+            artifact "API REST" as API
+            artifact "OpenRouterService" as AIService
+        }
+    }
+}
+
+database "PostgreSQL" as DB
+
+cloud "OpenRouter" as OpenRouter
+
+Usuario --> Browser
+Browser --> Frontend
+Frontend --> API : HTTPS / HTTP
+API --> DB : Entity Framework Core
+API --> AIService
+AIService --> OpenRouter : HTTPS
+
+@enduml

@@ -1,0 +1,76 @@
+@startuml
+left to right direction
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam shadowing false
+skinparam packageStyle rectangle
+
+package "Experiencia de aprendizaje" {
+    class Usuario <<persistente>> {
+        nombre
+        correo
+    }
+
+    class "Tema de estudio" as Tema <<concepto>> {
+        contenido
+    }
+
+    class "Consulta al asistente" as Consulta <<temporal>> {
+        pregunta
+        respuesta
+    }
+
+    class Cuestionario <<temporal>> {
+        preguntas
+    }
+
+    class Pregunta <<temporal>> {
+        enunciado
+        opciones
+    }
+
+    class Respuesta <<temporal>> {
+        respuesta seleccionada
+    }
+}
+
+package "Seguimiento del aprendizaje" {
+    class Progreso <<persistente>> {
+        puntuacion
+        retroalimentacion
+    }
+
+    class Evaluacion <<persistente>> {
+        puntuacion
+        retroalimentacion
+    }
+
+    class Flashcard <<persistente>> {
+        pregunta
+        respuesta
+    }
+}
+
+Usuario "1" -- "0..*" Consulta : realiza
+Consulta "0..*" -- "0..1" Tema : aborda
+
+Usuario "1" -- "0..*" Progreso : desarrolla
+Tema "1" -- "0..*" Progreso : organiza
+
+Progreso "1" -- "0..*" Cuestionario : sirve de referencia
+Cuestionario "1" *-- "1..*" Pregunta : contiene
+Usuario "1" -- "0..*" Respuesta : proporciona
+Pregunta "1" -- "0..*" Respuesta : recibe
+
+Progreso "1" -- "0..*" Evaluacion : registra
+Cuestionario "1" -- "0..1" Evaluacion : da lugar a
+Evaluacion "1" *-- "0..*" Flashcard : relaciona
+
+legend bottom
+  |= Clasificacion |= Significado |
+  | Persistente | Informacion registrada en el sistema |
+  | Temporal | Elemento utilizado durante la interaccion |
+  | Concepto | Concepto del dominio, no entidad independiente |
+endlegend
+
+@enduml

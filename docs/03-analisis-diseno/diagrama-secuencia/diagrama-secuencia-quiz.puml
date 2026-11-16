@@ -1,0 +1,48 @@
+@startuml
+actor Usuario as U
+participant Frontend as F
+participant "Evaluation Controller" as C
+participant "Unit of Work" as W
+participant "Progress Repository" as R
+participant "AI Service" as S
+participant OpenRouter as O
+participant "Evaluation Session Repository" as E
+database PostgreSQL as DB
+
+U -> F : Solicitar cuestionario
+F -> C : Solicitar quiz con progressId
+
+C -> R : Consultar progreso
+R -> DB : Buscar progreso
+DB --> R : Datos del progreso
+R --> C : Devolver informacion
+
+C -> S : Solicitar generacion de preguntas
+S -> O : Enviar solicitud
+O --> S : Devolver preguntas
+S --> C : Entregar contenido
+
+C -> C : Procesar preguntas
+C --> F : Devolver cuestionario
+F --> U : Mostrar preguntas
+
+U -> F : Enviar respuestas
+F -> C : Enviar respuestas del quiz
+
+C -> C : Calcular puntuacion
+C -> E : Crear sesion y flashcards
+E -> DB : Guardar evaluacion y flashcards
+DB --> E : Confirmacion
+E --> C : Resultado del registro
+
+C -> R : Actualizar puntuacion del progreso
+R -> DB : Guardar cambios
+DB --> R : Confirmacion
+
+C -> W : Guardar cambios
+W --> C : Confirmacion
+
+C --> F : Devolver resultado
+F --> U : Mostrar puntuacion
+
+@enduml

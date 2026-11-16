@@ -1,0 +1,37 @@
+@startuml
+skinparam componentStyle rectangle
+skinparam linetype ortho
+
+actor Usuario
+
+package "Frontend - Angular 20" {
+    [Interfaz de usuario] as Frontend
+    [Servicios HTTP] as FrontServices
+    [Autenticación y JWT] as Auth
+}
+
+package "Backend - ASP.NET Core .NET 9" {
+    [API REST] as API
+    [Lógica de aplicación] as Application
+    [Acceso a datos] as Infrastructure
+}
+
+database "PostgreSQL" as DB
+cloud "OpenRouter" as AI
+cloud "Render" as Hosting
+
+Usuario --> Frontend
+Frontend --> FrontServices
+Frontend --> Auth
+FrontServices --> API : Solicitudes HTTP
+Auth --> API : Token JWT
+
+API --> Application
+Application --> Infrastructure
+Infrastructure --> DB : Entity Framework Core
+
+Application --> AI : Solicitudes de IA
+
+API ..> Hosting : Despliegue
+
+@enduml

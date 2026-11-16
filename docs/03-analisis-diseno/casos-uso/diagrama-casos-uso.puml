@@ -1,0 +1,69 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam DefaultFontName Arial
+
+actor Visitante
+actor "Usuario autenticado" as UserAuth
+actor "Servicio de inteligencia artificial" as AIService
+actor "Base de datos" as DB
+
+rectangle "Sistema Mentor-IA" {
+    package "Autenticación y Sesión" {
+        usecase "CU-001: Registrar usuario" as CU1
+        usecase "CU-002: Iniciar sesión" as CU2
+        usecase "CU-011: Gestionar perfil" as CU11
+        usecase "CU-012: Cerrar sesión" as CU12
+    }
+
+    package "Panel y Navegación" {
+        usecase "CU-003: Navegar por Mentor-IA" as CU3
+        usecase "CU-004: Consultar panel principal" as CU4
+    }
+
+    package "Módulo de Inteligencia" {
+        usecase "CU-005: Realizar consulta al asistente IA" as CU5
+        usecase "CU-006: Generar recursos de aprendizaje" as CU6
+    }
+
+    package "Evaluación y Progreso" {
+        usecase "CU-007: Consultar flashcards" as CU7
+        usecase "CU-008: Realizar evaluación" as CU8
+        usecase "CU-009: Consultar resultado de evaluación" as CU9
+        usecase "CU-010: Consultar progreso de aprendizaje" as CU10
+    }
+
+    package "Gestión Transversal y Aprendizaje Integrado" {
+        usecase "CU-013: Gestionar errores durante la interacción" as CU13
+        usecase "CU-014: Gestionar proceso de aprendizaje integrado" as CU14
+    }
+}
+
+Visitante --> CU1
+Visitante --> CU2
+
+UserAuth --> CU2
+UserAuth --> CU3
+UserAuth --> CU4
+UserAuth --> CU5
+UserAuth --> CU6
+UserAuth --> CU7
+UserAuth --> CU8
+UserAuth --> CU9
+UserAuth --> CU10
+UserAuth --> CU11
+UserAuth --> CU12
+UserAuth --> CU14
+
+CU5 --> AIService
+CU6 --> AIService
+
+CU1 --> DB
+CU2 --> DB
+CU7 --> DB
+CU8 --> DB
+CU9 --> DB
+CU10 --> DB
+CU11 --> DB
+@enduml

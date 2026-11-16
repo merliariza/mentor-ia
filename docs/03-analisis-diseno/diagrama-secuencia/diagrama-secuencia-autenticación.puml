@@ -1,0 +1,43 @@
+@startuml
+actor Usuario
+participant "Frontend Angular" as Frontend
+participant "AuthController" as Auth
+database "PostgreSQL" as DB
+
+Usuario -> Frontend : Ingresa a autenticación
+
+alt Registro de usuario
+    Usuario -> Frontend : Completa formulario de registro
+    Frontend -> Auth : POST Register(RegisterDto)
+    Auth -> DB : Consultar correo electrónico
+    DB --> Auth : Resultado de consulta
+
+    alt Correo disponible
+        Auth -> Auth : Generar hash con BCrypt
+        Auth -> DB : Guardar UserMember
+        DB --> Auth : Confirmación de registro
+        Auth --> Frontend : Respuesta de registro exitoso
+        Frontend --> Usuario : Mostrar confirmación
+    else Correo ya registrado
+        Auth --> Frontend : Error de correo duplicado
+        Frontend --> Usuario : Mostrar mensaje de error
+    end
+
+else Inicio de sesión
+    Usuario -> Frontend : Ingresa correo y contraseña
+    Frontend -> Auth : POST Login(LoginDto)
+    Auth -> DB : Buscar usuario por correo
+    DB --> Auth : Datos del usuario
+
+    alt Usuario encontrado y contraseña válida
+        Auth -> Auth : Verificar contraseña con BCrypt
+        Auth -> Auth : Generar token JWT
+        Auth --> Frontend : DataUserDto con token
+        Frontend --> Usuario : Permitir acceso
+    else Credenciales inválidas
+        Auth --> Frontend : Respuesta de autenticación fallida
+        Frontend --> Usuario : Mostrar mensaje de error
+    end
+end
+
+@enduml
